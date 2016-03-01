@@ -111,6 +111,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
   // 4. once you get a cursor object, uncomment the code below to see the events displayed in the
   // list view.
 
+//
+//
 //    ListAdapter listAdapter = new SimpleCursorAdapter(
 //        this,
 //        android.R.layout.simple_expandable_list_item_2,
@@ -119,7 +121,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //        new int[] {android.R.id.text1, android.R.id.text2},
 //        0
 //    );
-//
+
 //    lv.setAdapter(listAdapter);
   }
 
