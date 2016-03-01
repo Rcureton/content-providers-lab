@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -153,13 +154,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
   public void update() {
     //TODO: Using the number eventID from the method insertEventInCalendar(), update the event
 
-    ContentResolver cr = getContentResolver();
-    ContentValues values = new ContentValues();
-    Uri updateUri = null;
-    // The new title for the event
-    values.put(CalendarContract.Events.TITLE, "Coding Bro's Season 1");
-    updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, mLastEvent);
-    int rows = getContentResolver().update(updateUri, values, null, null);
+    Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, mLastEvent);
+    Intent intent = new Intent(Intent.ACTION_EDIT)
+            .setData(uri)
+            .putExtra(CalendarContract.Events.TITLE, "Coding Bro's Season 1");
+    startActivity(intent);
 
     // that was added in that method
 
