@@ -105,10 +105,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     long startMillis = 0;
     long endMillis = 0;
     Calendar beginTime = Calendar.getInstance();
-    beginTime.set(2016, 3, 1);
+    beginTime.set(2016, 2, 1);
     startMillis = beginTime.getTimeInMillis();
     Calendar endTime = Calendar.getInstance();
-    endTime.set(2016, 3, 4);
+    endTime.set(2016, 2, 4);
     endMillis = endTime.getTimeInMillis();
 
     ContentResolver cr = getContentResolver();
