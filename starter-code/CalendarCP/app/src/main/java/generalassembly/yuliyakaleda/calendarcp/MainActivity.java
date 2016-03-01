@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
   private Button updateEvent;
   private Button deleteEvent;
   private ListView lv;
+  private long mLastEvent=-1;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
-    long eventId = Long.parseLong(uri.getLastPathSegment());
+    mLastEvent= Long.parseLong(uri.getLastPathSegment());
 
 
 
@@ -151,6 +152,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
   public void update() {
     //TODO: Using the number eventID from the method insertEventInCalendar(), update the event
+
+    ContentResolver cr = getContentResolver();
+    ContentValues values = new ContentValues();
+    Uri updateUri = null;
+    // The new title for the event
+    values.put(CalendarContract.Events.TITLE, "Coding Bro's Season 1");
+    updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, mLastEvent);
+    int rows = getContentResolver().update(updateUri, values, null, null);
+
     // that was added in that method
 
   }
