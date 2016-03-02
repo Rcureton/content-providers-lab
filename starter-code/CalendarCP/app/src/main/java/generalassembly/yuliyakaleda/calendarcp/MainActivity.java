@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         new String[] {"roberterrera@@gmail.com"},
 
         //TODO: insert your email address that will be associated with the calendar
-        new String[] {"rashad.cureton@gmail.com"},
+//        new String[] {"rashad.cureton@gmail.com"},
 
         null
     );
@@ -109,8 +109,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 //  3. after inserting the row in the provider, retrieve the id of the event using the method below.
 // Just uncomment the line below. You will need this id to update and delete this event later.
-
-    eventId = Long.parseLong(uri.getLastPathSegment());
+//
+//    eventId = Long.parseLong(uri.getLastPathSegment());
 
 
     long calID = 1;
@@ -135,6 +135,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
     mLastEvent= Long.parseLong(uri.getLastPathSegment());
+    Log.d("event",mLastEvent+ " ");
 
 
 
