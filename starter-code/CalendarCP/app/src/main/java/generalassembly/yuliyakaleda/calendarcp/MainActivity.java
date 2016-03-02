@@ -1,6 +1,7 @@
 package generalassembly.yuliyakaleda.calendarcp;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -65,8 +66,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         uri,
         columns,
         CalendarContract.Calendars.ACCOUNT_NAME + " = ?",
-        //TODO: insert your email address that will be associated with the calendar
-        new String[] {"your.email@gmail.com"},
+        new String[] {"roberterrera@@gmail.com"},
         null
     );
 
@@ -104,25 +104,33 @@ public class MainActivity extends Activity implements View.OnClickListener {
   //This method should return all the events from your calendar from February 29th till March 4th
   // in the year 2016.
   public void fetchEvents() {
-  //TODO:
-  // 1. get 2 calendar instances: startTime (Feb 29) and endTime (March 4) in milliseconds
-  // 2. set the limit of 100 events and order DESC
-  // 3. get all the events within that period using a cursor object
-  // 4. once you get a cursor object, uncomment the code below to see the events displayed in the
-  // list view.
+    Calendar startTime = Calendar.getInstance();
+    startTime.set(2016, 2, 29, 0, 1);
+    long startMillis = startTime.getTimeInMillis();
+    Calendar endTime = Calendar.getInstance();
+    endTime.set(2016, 3, 4, 0, 1);
+    long endMillis = endTime.getTimeInMillis();
 
-//
-//
-//    ListAdapter listAdapter = new SimpleCursorAdapter(
-//        this,
-//        android.R.layout.simple_expandable_list_item_2,
-//        cursor,
-//        new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE},
-//        new int[] {android.R.id.text1, android.R.id.text2},
-//        0
-//    );
+    String limitAndOrder = CalendarContract.Events.DTSTART + " DESC LIMIT 100";
 
-//    lv.setAdapter(listAdapter);
+    ContentResolver contentResolver = getContentResolver();
+    Uri uri = CalendarContract.Events.CONTENT_URI;
+    String selection = "((" + CalendarContract.Events.DTSTART + " >= ?) AND ("+CalendarContract.Events.DTEND + " <= ?))";
+    String[] selectionArgs =  new String[] {String.valueOf(startMillis),String.valueOf(endMillis)};
+
+    String[] columns = new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
+    Cursor cursor = contentResolver.query(uri, columns, selection, selectionArgs, CalendarContract.Events.DTSTART + " DESC LIMIT 100");
+
+    ListAdapter listAdapter = new SimpleCursorAdapter(
+        this,
+        android.R.layout.simple_expandable_list_item_2,
+        cursor,
+        new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE},
+        new int[] {android.R.id.text1, android.R.id.text2},
+        0
+    );
+
+    lv.setAdapter(listAdapter);
   }
 
   public void update() {
@@ -132,8 +140,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
   }
 
   public void delete() {
-    //TODO: Using the number eventID from the method insertEventInCalendar(), delete the event
-    // that was added in that method
+    ContentResolver cr = getContentResolver();
+    ContentValues values = new ContentValues();
+    Uri deleteUri = null;
+    deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId);
+    int rows = getContentResolver().delete(deleteUri, null, null);
   }
 
   @Override
