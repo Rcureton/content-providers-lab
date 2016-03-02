@@ -69,7 +69,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         columns,
         CalendarContract.Calendars.ACCOUNT_NAME + " = ?",
         //TODO: insert your email address that will be associated with the calendar
-        new String[] {"your.email@gmail.com"},
+        new String[] {"rashad.cureton@gmail.com"},
         null
     );
 
