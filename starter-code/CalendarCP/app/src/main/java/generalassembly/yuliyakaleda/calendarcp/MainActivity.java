@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +29,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
   private Button updateEvent;
   private Button deleteEvent;
   private ListView lv;
+
   private long eventId;
+
+  private long mLastEvent=-1;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +72,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         uri,
         columns,
         CalendarContract.Calendars.ACCOUNT_NAME + " = ?",
+
         new String[] {"roberterrera@@gmail.com"},
+
+        //TODO: insert your email address that will be associated with the calendar
+        new String[] {"rashad.cureton@gmail.com"},
+
         null
     );
 
@@ -85,21 +95,50 @@ public class MainActivity extends Activity implements View.OnClickListener {
   }
 
   public void insertEventInCalendar(String title, String description, String location) {
- //TODO:
- // 1. get 2 calendar instances: startTime and endTime in milliseconds and set March 1 as the
- // date of the event. The event can last as long as you want, so you can set any time.
+    //TODO:
+    // 1. get 2 calendar instances: startTime and endTime in milliseconds and set March 1 as the
+    // date of the event. The event can last as long as you want, so you can set any time.
 
- // 2. set the following properties of the event and save the event in the provider
- //   - CalendarContract.Events.DTSTART
- //   - CalendarContract.Events.DTEND
- //   - CalendarContract.Events.TITLE
- //   - CalendarContract.Events.DESCRIPTION
- //   - CalendarContract.Events.CALENDAR_ID (the value 1 should give the default calendar)
- //   - CalendarContract.Events.EVENT_TIMEZONE
+    // 2. set the following properties of the event and save the event in the provider
+    //   - CalendarContract.Events.DTSTART
+    //   - CalendarContract.Events.DTEND
+    //   - CalendarContract.Events.TITLE
+    //   - CalendarContract.Events.DESCRIPTION
+    //   - CalendarContract.Events.CALENDAR_ID (the value 1 should give the default calendar)
+    //   - CalendarContract.Events.EVENT_TIMEZONE
 
 //  3. after inserting the row in the provider, retrieve the id of the event using the method below.
 // Just uncomment the line below. You will need this id to update and delete this event later.
+
     eventId = Long.parseLong(uri.getLastPathSegment());
+
+
+    long calID = 1;
+    long startMillis = 0;
+    long endMillis = 0;
+    Calendar beginTime = Calendar.getInstance();
+    beginTime.set(2016, 2, 1);
+    startMillis = beginTime.getTimeInMillis();
+    Calendar endTime = Calendar.getInstance();
+    endTime.set(2016, 2, 4);
+    endMillis = endTime.getTimeInMillis();
+
+    ContentResolver cr = getContentResolver();
+    ContentValues values = new ContentValues();
+    values.put(CalendarContract.Events.DTSTART, startMillis);
+    values.put(CalendarContract.Events.DTEND, endMillis);
+    values.put(CalendarContract.Events.TITLE, "Code n' Chill");
+    values.put(CalendarContract.Events.DESCRIPTION, "Group Code");
+    values.put(CalendarContract.Events.CALENDAR_ID, calID);
+    values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/New York");
+
+    Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+    mLastEvent= Long.parseLong(uri.getLastPathSegment());
+
+
+
+
   }
 
   //This method should return all the events from your calendar from February 29th till March 4th
@@ -136,6 +175,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
   public void update() {
     //TODO: Using the number eventID from the method insertEventInCalendar(), update the event
+
+    Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, mLastEvent);
+    Intent intent = new Intent(Intent.ACTION_EDIT)
+            .setData(uri)
+            .putExtra(CalendarContract.Events.TITLE, "Coding Bro's Season 1");
+    startActivity(intent);
+
     // that was added in that method
 
   }
